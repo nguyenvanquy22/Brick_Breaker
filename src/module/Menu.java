@@ -133,51 +133,61 @@ public class Menu extends JPanel implements KeyListener
 	public void keyPressed(KeyEvent e) 
 	{
 		// TODO Auto-generated method stub		
-		switch (e.getKeyCode()) 
+		if(!historyDisplay) 
 		{
-			case KeyEvent.VK_UP:
-				valueFont[level--] = 1;
-				level = level<0 ? 0:level;
-				valueFont[level] = 1.5;
-				break;
-			case KeyEvent.VK_DOWN:
-				valueFont[level++] = 1;
-				level = level>2 ? 2:level;
-				valueFont[level] = 1.5;
-				break;
-			case KeyEvent.VK_ENTER:
-				menuDisplay = false;
-				break;
-			case KeyEvent.VK_0:
-				level = 0;
-				menuDisplay = false;
-				break;
-			case KeyEvent.VK_1:
-				level = 1;
-				menuDisplay = false;
-				break;
-			case KeyEvent.VK_2:
-				level = 2;
-				menuDisplay = false;
-				break;
-				
-			case KeyEvent.VK_H:
-				historyDisplay = true;
-				getDataOnece = true;
-				break;
-			case KeyEvent.VK_B:
-				historyDisplay = false;
-				break;
-			case KeyEvent.VK_LEFT:
-				pageIndex--;
-				pageIndex = pageIndex<1 ? 1:pageIndex;
-				break;
-			case KeyEvent.VK_RIGHT:
-				pageIndex++;
-				pageIndex = pageIndex>3 ? 3:pageIndex;
-				break;
-			default:
-				break;
+			switch (e.getKeyCode())
+			{
+				case KeyEvent.VK_UP:
+					valueFont[level--] = 1;
+					level = level<0 ? 0:level;
+					valueFont[level] = 1.5;
+					break;
+				case KeyEvent.VK_DOWN:
+					valueFont[level++] = 1;
+					level = level>2 ? 2:level;
+					valueFont[level] = 1.5;
+					break;
+				case KeyEvent.VK_ENTER:
+					menuDisplay = false;
+					break;
+				case KeyEvent.VK_0:
+					level = 0;
+					menuDisplay = false;
+					break;
+				case KeyEvent.VK_1:
+					level = 1;
+					menuDisplay = false;
+					break;
+				case KeyEvent.VK_2:
+					level = 2;
+					menuDisplay = false;
+					break;
+				case KeyEvent.VK_H:
+					historyDisplay = true;
+					getDataOnece = true;
+					break;
+				default:
+					break;
+			}
+		}
+		else 
+		{
+			switch (e.getKeyCode())
+			{
+				case KeyEvent.VK_B:
+					historyDisplay = false;
+					break;
+				case KeyEvent.VK_LEFT:
+					pageIndex--;
+					pageIndex = pageIndex<1 ? 1:pageIndex;
+					break;
+				case KeyEvent.VK_RIGHT:
+					pageIndex++;
+					pageIndex = pageIndex>3 ? 3:pageIndex;
+					break;
+				default:
+					break;
+			}
 		}
 		repaint();
 	}
