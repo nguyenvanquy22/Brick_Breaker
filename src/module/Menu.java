@@ -6,11 +6,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
 
 import javax.swing.JPanel;
-
-import connection.GameDao;
 
 @SuppressWarnings("serial")
 public class Menu extends JPanel implements KeyListener 
@@ -19,15 +16,9 @@ public class Menu extends JPanel implements KeyListener
 	private double valueFont[] = {1.5,1,1,1};
 	private Image backGround = Toolkit.getDefaultToolkit().getImage("src/images/bgMenu.jpg");
 	
-	private int pageIndexCurrent = 1;
-	private int pageIndexMax = 3;
-	private int pageNumber;
-	
 	private boolean menuDisplay = true;
-	private boolean historyDisplay = false;
-	private boolean getDataOnece = true;
 	
-	private List<DataGame> data = null;
+	private History history = new History();
 	
 	public Menu() 
 	{
@@ -54,7 +45,7 @@ public class Menu extends JPanel implements KeyListener
 	{
 		super.paint(g);
 		
-		if(!historyDisplay) {
+		if(!history.isHistoryDisplay()) {
 			// background
 //			g.setColor(Color.black);
 //			g.fillRect(1, 1, 692, 592);
@@ -82,49 +73,7 @@ public class Menu extends JPanel implements KeyListener
 		} 
 		else 
 		{
-			// background
-			g.setColor(Color.black);
-			g.fillRect(1, 1, 692, 592);
-			
-			// header
-			g.setColor(Color.red);
-			g.setFont(new Font("serif",Font.CENTER_BASELINE, 30));
-			g.drawString("No.", 50, 50);
-			g.drawString("Date", 200, 50);
-			g.drawString("Level", 370, 50);
-			g.drawString("Score", 470, 50);
-			g.drawString("Result", 570, 50);
-			
-			// history
-			if(getDataOnece) {
-				getDataOnece = false;
-				data = new GameDao().getAllDataGame();
-			}
-			int n = data.size();
-			pageNumber = n%10==0 ? n/10:n/10+1;
-			pageNumber = pageNumber>pageIndexMax ? pageIndexMax:pageNumber;
-			
-			g.setColor(Color.white);
-			g.setFont(new Font("serif",Font.CENTER_BASELINE, 20));
-			int t = (pageIndexCurrent-1)*10;
-			int No = 1;
-			for(int i=n-t-1; i>=n-10-t && i>=0; i--) 
-			{
-				int y = 50+42*No;
-				g.drawString((No+t)<10?"0"+(No+t):""+(No+t), 55, y);
-				g.drawString(data.get(i).getTimePlayGame(), 150, y);
-				g.drawString(data.get(i).getLevelGame()+"", 400, y);
-				g.drawString(data.get(i).getScore()+"", 490, y);
-				g.drawString(data.get(i).getResult()==1?"Win":"Lose", 590, y);
-				No++;
-			}
-			
-			// prev & next
-			g.setColor(Color.red);
-			g.setFont(new Font("serif",Font.CENTER_BASELINE, 30));
-			g.drawString("<--", 500, 535);
-			g.drawString("0"+pageIndexCurrent, 555, 535);
-			g.drawString("-->", 600, 535);			
+			history.paintHistory(g);		
 		}
 		
 		g.dispose();
@@ -134,7 +83,7 @@ public class Menu extends JPanel implements KeyListener
 	public void keyPressed(KeyEvent e) 
 	{
 		// TODO Auto-generated method stub		
-		if(!historyDisplay) 
+		if(!history.isHistoryDisplay()) 
 		{
 			switch (e.getKeyCode())
 			{
@@ -151,8 +100,8 @@ public class Menu extends JPanel implements KeyListener
 				case KeyEvent.VK_ENTER:
 					if(level<3) menuDisplay = false;
 					else {
-						historyDisplay = true;
-						getDataOnece = true;
+						history.setHistoryDisplay(true);
+						history.setDataGetOnece(true);
 					}
 					break;
 				case KeyEvent.VK_0:
@@ -168,8 +117,8 @@ public class Menu extends JPanel implements KeyListener
 					menuDisplay = false;
 					break;
 				case KeyEvent.VK_H:
-					historyDisplay = true;
-					getDataOnece = true;
+					history.setHistoryDisplay(true);
+					history.setDataGetOnece(true);
 					break;
 				default:
 					break;
@@ -177,22 +126,7 @@ public class Menu extends JPanel implements KeyListener
 		}
 		else 
 		{
-			switch (e.getKeyCode())
-			{
-				case KeyEvent.VK_B:
-					historyDisplay = false;
-					break;
-				case KeyEvent.VK_LEFT:
-					pageIndexCurrent--;
-					pageIndexCurrent = pageIndexCurrent<1 ? 1:pageIndexCurrent;
-					break;
-				case KeyEvent.VK_RIGHT:
-					pageIndexCurrent++;
-					pageIndexCurrent = pageIndexCurrent>pageNumber ? pageNumber:pageIndexCurrent;
-					break;
-				default:
-					break;
-			}
+			history.handleKeyPress(e);
 		}
 		repaint();
 	}
