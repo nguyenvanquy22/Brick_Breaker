@@ -77,6 +77,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		{
 			if(bricksMapDownThread != null)	bricksMapDownThread.stopThread();
 			bricksMapDownThread = new BricksMapDownThread(bricksMapDown, 12000);
+			isBricksMapDownRun = false;
 			isBricksMapDownRun1 = true;
 		}
 		
