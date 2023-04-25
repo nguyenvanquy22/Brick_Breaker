@@ -101,7 +101,7 @@ public class Menu extends JPanel implements KeyListener
 				data = new GameDao().getAllDataGame();
 			}
 			int n = data.size();
-			pageNumber = n%10==0 ? n%10:n%10+1;
+			pageNumber = n%10==0 ? n/10:n/10+1;
 			pageNumber = pageNumber>pageIndexMax ? pageIndexMax:pageNumber;
 			
 			g.setColor(Color.white);
